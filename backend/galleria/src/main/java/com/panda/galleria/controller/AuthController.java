@@ -1,6 +1,7 @@
 package com.panda.galleria.controller;
 
 import com.panda.galleria.dto.AuthenticationResponse;
+import com.panda.galleria.dto.LoginRequest;
 import com.panda.galleria.dto.RegisterRequest;
 import com.panda.galleria.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -24,5 +25,12 @@ public class AuthController {
             @RequestBody RegisterRequest request
     ){
         return ResponseEntity.ok(authService.register(request));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthenticationResponse> login(
+            @RequestBody LoginRequest request
+    ){
+        return ResponseEntity.ok(authService.login(request));
     }
 }

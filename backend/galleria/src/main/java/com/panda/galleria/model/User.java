@@ -1,5 +1,7 @@
 package com.panda.galleria.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.panda.galleria.dto.UserResponse;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -33,6 +35,15 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> posts;
+
+    public UserResponse toUserResponse (){
+        return UserResponse
+                .builder()
+                .username(this.username)
+                .posts(this.posts)
+                .prpUrl(this.pfpUrl)
+                .build();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
