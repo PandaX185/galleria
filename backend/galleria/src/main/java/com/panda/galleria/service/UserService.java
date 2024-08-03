@@ -1,5 +1,6 @@
 package com.panda.galleria.service;
 
+import com.panda.galleria.dto.UpdateUserRequest;
 import com.panda.galleria.dto.UserResponse;
 import com.panda.galleria.model.User;
 import com.panda.galleria.repository.UserRepository;
@@ -19,11 +20,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthService authService;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthService authService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authService = authService;
     }
 
     public List<UserResponse> findAll() {
@@ -43,20 +46,16 @@ public class UserService {
         throw new UsernameNotFoundException("Username " + username + " not found");
     }
 
-    public UserResponse update(String username, User user) throws BadRequestException {
+    public UserResponse update(String username, UpdateUserRequest user) {
         Optional<User> updatedUser = userRepository.findByUsername(username.toLowerCase().trim());
         if(updatedUser.isPresent()) {
-            if(!updatedUser.get().getUsername().isBlank() && userRepository.findByUsername(user.getUsername()).isEmpty())
-                updatedUser.get().setUsername(user.getUsername());
-            else if(!updatedUser.get().getUsername().isBlank())
-                throw new BadRequestException("Username " + user.getUsername() + " already exists");
-            if(!updatedUser.get().getPassword().isBlank())
+            if(!user.getPassword().isBlank())
                 updatedUser.get().setPassword(passwordEncoder.encode(user.getPassword()));
-            if(!updatedUser.get().getPfpUrl().isBlank())
-                updatedUser.get().setPfpUrl(updatedUser.get().getPfpUrl());
+            if(!user.getPhoto().isEmpty())
+                updatedUser.get().setPfpUrl(authService.uploadImage(user.getPhoto()));
             return userRepository.save(updatedUser.get()).toUserResponse();
         }
-        throw new UsernameNotFoundException("Username " + user.getUsername() + " not found");
+        throw new UsernameNotFoundException("Username " + username + " not found");
     }
 
 }

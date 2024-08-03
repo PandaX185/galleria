@@ -1,5 +1,6 @@
 package com.panda.galleria.controller;
 
+import com.panda.galleria.dto.UpdateUserRequest;
 import com.panda.galleria.dto.UserResponse;
 import com.panda.galleria.model.User;
 import com.panda.galleria.service.UserService;
@@ -7,6 +8,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -32,8 +34,12 @@ public class UserController {
     }
 
     @PutMapping("/{username}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable String username, @RequestBody User user) throws BadRequestException {
-        return ResponseEntity.ok(userService.update(username,user));
+    public ResponseEntity<UserResponse> updateUser(
+            @PathVariable String username,
+            @RequestParam(value = "password", required = false) String password,
+            @RequestParam(value = "photo", required = false) MultipartFile photo
+    ) {
+        return ResponseEntity.ok(userService.update(username,new UpdateUserRequest(password,photo)));
     }
 
 }

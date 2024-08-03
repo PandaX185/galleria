@@ -10,8 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
-    private String username;
+public class UpdateUserRequest {
     private String password;
     private MultipartFile photo;
 }

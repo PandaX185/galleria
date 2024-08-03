@@ -7,10 +7,18 @@ import com.panda.galleria.model.User;
 import com.panda.galleria.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 @Service
 public class AuthService {
@@ -19,11 +27,27 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+    @Value("${server.port}")
+    private String SERVER_PORT;
+
     @Autowired
     public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+    }
+
+    public String uploadImage(MultipartFile photo) {
+        try {
+            String UPLOAD_DIR = "uploads/";
+            Files.createDirectories(Paths.get(UPLOAD_DIR));
+            String uniqueFilename = UUID.randomUUID() + "_" + photo.getOriginalFilename();
+            Path filePath = Paths.get(UPLOAD_DIR + uniqueFilename);
+            Files.write(filePath, photo.getBytes());
+            return "http://localhost:" + SERVER_PORT + "/" + UPLOAD_DIR + uniqueFilename;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload photo", e);
+        }
     }
 
     public AuthenticationResponse register(RegisterRequest request) {
@@ -35,6 +59,10 @@ public class AuthService {
 
         if(userRepository.findByUsername(request.getUsername().trim().toLowerCase()).isPresent()){
             throw new BadCredentialsException("Username is already in use");
+        }
+
+        if(!request.getPhoto().isEmpty()){
+            user.setPfpUrl(uploadImage(request.getPhoto()));
         }
 
         userRepository.save(user);

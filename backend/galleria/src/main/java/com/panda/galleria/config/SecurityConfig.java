@@ -45,6 +45,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/auth/**")
                 .permitAll()
+                .requestMatchers("/uploads/**")
+                .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

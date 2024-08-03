@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -21,10 +22,11 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest request
-    ){
-        return ResponseEntity.ok(authService.register(request));
+    public ResponseEntity<AuthenticationResponse> registerUser(
+            @RequestParam("username") String username,
+            @RequestParam("password") String password,
+            @RequestParam(value = "photo", required = false) MultipartFile photo) {
+        return ResponseEntity.ok(authService.register(new RegisterRequest(username, password, photo)));
     }
 
     @PostMapping("/login")
