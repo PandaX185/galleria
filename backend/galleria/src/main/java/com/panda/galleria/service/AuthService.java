@@ -1,11 +1,10 @@
 package com.panda.galleria.service;
 
-import com.panda.galleria.dto.AuthenticationResponse;
-import com.panda.galleria.dto.LoginRequest;
-import com.panda.galleria.dto.RegisterRequest;
+import com.panda.galleria.dto.auth.AuthenticationResponse;
+import com.panda.galleria.dto.auth.LoginRequest;
+import com.panda.galleria.dto.auth.RegisterRequest;
 import com.panda.galleria.model.User;
 import com.panda.galleria.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;

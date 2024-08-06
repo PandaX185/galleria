@@ -1,10 +1,8 @@
 package com.panda.galleria.controller;
 
-import com.panda.galleria.dto.UpdateUserRequest;
-import com.panda.galleria.dto.UserResponse;
-import com.panda.galleria.model.User;
+import com.panda.galleria.dto.user.UpdateUserRequest;
+import com.panda.galleria.dto.user.UserResponse;
 import com.panda.galleria.service.UserService;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,5 +39,4 @@ public class UserController {
     ) {
         return ResponseEntity.ok(userService.update(username,new UpdateUserRequest(password,photo)));
     }
-
 }

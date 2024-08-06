@@ -1,10 +1,9 @@
 package com.panda.galleria.controller;
 
-import com.panda.galleria.dto.AuthenticationResponse;
-import com.panda.galleria.dto.LoginRequest;
-import com.panda.galleria.dto.RegisterRequest;
+import com.panda.galleria.dto.auth.AuthenticationResponse;
+import com.panda.galleria.dto.auth.LoginRequest;
+import com.panda.galleria.dto.auth.RegisterRequest;
 import com.panda.galleria.service.AuthService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

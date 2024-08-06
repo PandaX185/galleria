@@ -1,4 +1,4 @@
-package com.panda.galleria.dto;
+package com.panda.galleria.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginRequest {
-    private String username;
-    private String password;
+public class AuthenticationResponse {
+    private String token;
 }

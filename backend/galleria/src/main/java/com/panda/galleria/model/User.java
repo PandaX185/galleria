@@ -1,7 +1,6 @@
 package com.panda.galleria.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.panda.galleria.dto.UserResponse;
+import com.panda.galleria.dto.user.UserResponse;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

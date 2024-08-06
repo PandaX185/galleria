@@ -1,15 +1,13 @@
 package com.panda.galleria.service;
 
-import com.panda.galleria.dto.UpdateUserRequest;
-import com.panda.galleria.dto.UserResponse;
+import com.panda.galleria.dto.user.UpdateUserRequest;
+import com.panda.galleria.dto.user.UserResponse;
 import com.panda.galleria.model.User;
 import com.panda.galleria.repository.UserRepository;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,13 +45,14 @@ public class UserService {
     }
 
     public UserResponse update(String username, UpdateUserRequest user) {
-        Optional<User> updatedUser = userRepository.findByUsername(username.toLowerCase().trim());
-        if(updatedUser.isPresent()) {
+        Optional<User> oldUser = userRepository.findByUsername(username.toLowerCase().trim());
+        if(oldUser.isPresent()) {
+            var updatedUser = oldUser.get();
             if(!user.getPassword().isBlank())
-                updatedUser.get().setPassword(passwordEncoder.encode(user.getPassword()));
+                updatedUser.setPassword(passwordEncoder.encode(user.getPassword()));
             if(!user.getPhoto().isEmpty())
-                updatedUser.get().setPfpUrl(authService.uploadImage(user.getPhoto()));
-            return userRepository.save(updatedUser.get()).toUserResponse();
+                updatedUser.setPfpUrl(authService.uploadImage(user.getPhoto()));
+            return userRepository.save(updatedUser).toUserResponse();
         }
         throw new UsernameNotFoundException("Username " + username + " not found");
     }

@@ -1,4 +1,4 @@
-package com.panda.galleria.dto;
+package com.panda.galleria.dto.user;
 
 import com.panda.galleria.model.Post;
 import lombok.AllArgsConstructor;
