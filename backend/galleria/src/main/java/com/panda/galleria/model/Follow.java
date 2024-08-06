@@ -1,12 +1,14 @@
 package com.panda.galleria.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Setter
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Follow {
     @Id
     @GeneratedValue

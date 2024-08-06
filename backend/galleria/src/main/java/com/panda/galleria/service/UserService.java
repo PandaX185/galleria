@@ -36,10 +36,10 @@ public class UserService {
         return userResponses;
     }
 
-    public UserResponse findByUsername(String username) {
+    public User findByUsername(String username) {
         var user = userRepository.findByUsername(username.toLowerCase().trim());
         if(user.isPresent()) {
-            return user.get().toUserResponse();
+            return user.get();
         }
         throw new UsernameNotFoundException("Username " + username + " not found");
     }
