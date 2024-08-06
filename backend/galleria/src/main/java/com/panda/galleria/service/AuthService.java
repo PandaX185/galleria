@@ -5,6 +5,7 @@ import com.panda.galleria.dto.auth.LoginRequest;
 import com.panda.galleria.dto.auth.RegisterRequest;
 import com.panda.galleria.model.User;
 import com.panda.galleria.repository.UserRepository;
+import com.panda.galleria.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,28 +26,14 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-
-    @Value("${server.port}")
-    private String SERVER_PORT;
+    private final ImageUtil imageUtil;
 
     @Autowired
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, ImageUtil imageUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
-    }
-
-    public String uploadImage(MultipartFile photo) {
-        try {
-            String UPLOAD_DIR = "uploads/";
-            Files.createDirectories(Paths.get(UPLOAD_DIR));
-            String uniqueFilename = UUID.randomUUID() + "_" + photo.getOriginalFilename();
-            Path filePath = Paths.get(UPLOAD_DIR + uniqueFilename);
-            Files.write(filePath, photo.getBytes());
-            return "http://localhost:" + SERVER_PORT + "/" + UPLOAD_DIR + uniqueFilename;
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to upload photo", e);
-        }
+        this.imageUtil = imageUtil;
     }
 
     public AuthenticationResponse register(RegisterRequest request) {
@@ -61,7 +48,7 @@ public class AuthService {
         }
 
         if(!request.getPhoto().isEmpty()){
-            user.setPfpUrl(uploadImage(request.getPhoto()));
+            user.setPfpUrl(imageUtil.uploadImage(request.getPhoto()));
         }
 
         userRepository.save(user);

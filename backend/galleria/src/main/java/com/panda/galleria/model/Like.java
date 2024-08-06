@@ -1,5 +1,6 @@
 package com.panda.galleria.model;
 
+import com.panda.galleria.dto.like.LikeResponse;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,4 +21,11 @@ public class Like {
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
+
+    public LikeResponse toLikeResponse() {
+        return LikeResponse
+                .builder()
+                .user(user.toUserResponse())
+                .build();
+    }
 }

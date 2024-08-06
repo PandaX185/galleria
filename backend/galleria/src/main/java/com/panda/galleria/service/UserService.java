@@ -4,6 +4,7 @@ import com.panda.galleria.dto.user.UpdateUserRequest;
 import com.panda.galleria.dto.user.UserResponse;
 import com.panda.galleria.model.User;
 import com.panda.galleria.repository.UserRepository;
+import com.panda.galleria.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,13 +19,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthService authService;
+    private final ImageUtil imageUtil;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthService authService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthService authService, ImageUtil imageUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.authService = authService;
+        this.imageUtil = imageUtil;
     }
 
     public List<UserResponse> findAll() {
@@ -51,7 +52,7 @@ public class UserService {
             if(!user.getPassword().isBlank())
                 updatedUser.setPassword(passwordEncoder.encode(user.getPassword()));
             if(!user.getPhoto().isEmpty())
-                updatedUser.setPfpUrl(authService.uploadImage(user.getPhoto()));
+                updatedUser.setPfpUrl(imageUtil.uploadImage(user.getPhoto()));
             return userRepository.save(updatedUser).toUserResponse();
         }
         throw new UsernameNotFoundException("Username " + username + " not found");

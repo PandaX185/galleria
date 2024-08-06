@@ -39,7 +39,6 @@ public class User implements UserDetails {
         return UserResponse
                 .builder()
                 .username(this.username)
-                .posts(this.posts)
                 .prpUrl(this.pfpUrl)
                 .build();
     }

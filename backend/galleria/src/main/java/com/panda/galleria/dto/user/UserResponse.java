@@ -15,5 +15,4 @@ import java.util.List;
 public class UserResponse {
     private String username;
     private String prpUrl;
-    private List<Post> posts;
 }
