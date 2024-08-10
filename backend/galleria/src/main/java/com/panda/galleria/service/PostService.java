@@ -34,7 +34,8 @@ public class PostService {
                 .photoUrl(post.getPhotoUrl())
                 .build();
 
-        return postRepository.save(postEntity);
+        postRepository.save(postEntity);
+        return postEntity;
     }
 
     public Post getPost(Long id) throws PostNotFoundException {

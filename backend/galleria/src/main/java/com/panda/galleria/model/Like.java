@@ -1,14 +1,22 @@
 package com.panda.galleria.model;
 
 import com.panda.galleria.dto.like.LikeResponse;
+import com.panda.galleria.dto.like.PersonalLikesResponse;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
-@Table(name = "likes")
+@Table(
+        name = "likes",
+        indexes = {
+                @Index(name = "uq_like",columnList = "user_id,post_id",unique = true)
+        }
+)
 @Setter
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +34,14 @@ public class Like {
         return LikeResponse
                 .builder()
                 .user(user.toUserResponse())
+                .build();
+    }
+
+    public PersonalLikesResponse toPersonalLikesResponse() {
+        return PersonalLikesResponse
+                .builder()
+                .user(user.toUserResponse())
+                .post(post.toPersonalPostResponse())
                 .build();
     }
 }

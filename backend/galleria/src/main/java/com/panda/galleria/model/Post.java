@@ -1,5 +1,6 @@
 package com.panda.galleria.model;
 
+import com.panda.galleria.dto.post.PersonalPostResponse;
 import com.panda.galleria.dto.post.PostResponse;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -38,6 +39,16 @@ public class Post {
                 .author(user.toUserResponse())
                 .caption(caption)
                 .likes(likes.stream().map(Like::toLikeResponse).toList())
+                .likesCount((long) likes.size())
+                .photoUrl(photoUrl)
+                .build();
+    }
+
+    public PersonalPostResponse toPersonalPostResponse() {
+        return PersonalPostResponse
+                .builder()
+                .id(id)
+                .caption(caption)
                 .likesCount((long) likes.size())
                 .photoUrl(photoUrl)
                 .build();
