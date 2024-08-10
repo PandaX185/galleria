@@ -1,8 +1,7 @@
 package com.panda.galleria.controller;
 
+import com.panda.galleria.dto.follow.FollowResponse;
 import com.panda.galleria.dto.user.UserResponse;
-import com.panda.galleria.model.Follow;
-import com.panda.galleria.model.User;
 import com.panda.galleria.service.FollowService;
 import com.panda.galleria.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +25,13 @@ public class FollowController {
     }
 
     @PostMapping("/follow/{username}")
-    public ResponseEntity<Void> follow(
+    public ResponseEntity<FollowResponse> follow(
             @RequestHeader("Authorization") String token,
             @PathVariable String username
     ) {
         String myUsername = jwtService.extractUsername(token.substring(7));
         followService.follow(myUsername, username);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new FollowResponse("Followed "+username+" successfully"));
     }
 
     @GetMapping("/following/{username}")

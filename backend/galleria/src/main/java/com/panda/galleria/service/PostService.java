@@ -26,7 +26,7 @@ public class PostService {
         this.userService = userService;
     }
 
-    public PostResponse save(PostRequest post) {
+    public Post save(PostRequest post) {
         Post postEntity = Post
                 .builder()
                 .user(userService.findByUsername(post.getUsername()))
@@ -34,20 +34,19 @@ public class PostService {
                 .photoUrl(post.getPhotoUrl())
                 .build();
 
-        return postRepository.save(postEntity).toPostResponse();
+        return postRepository.save(postEntity);
     }
 
-    public PostResponse getPost(Long id) throws PostNotFoundException {
+    public Post getPost(Long id) throws PostNotFoundException {
         Optional<Post> post = postRepository.findById(id);
         if (post.isPresent()) {
-            return post.get().toPostResponse();
+            return post.get();
         }
         throw new PostNotFoundException("Post Not Found");
     }
 
-    public List<PostResponse> getPostsByUsername(String username) {
+    public List<Post> getPostsByUsername(String username) {
         User user = userService.findByUsername(username);
-        List<Post> posts = postRepository.findAllByUserId(user.getId());
-        return posts.stream().map(Post::toPostResponse).toList();
+        return postRepository.findAllByUserId(user.getId());
     }
 }

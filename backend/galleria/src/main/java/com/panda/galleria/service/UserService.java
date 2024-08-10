@@ -28,13 +28,8 @@ public class UserService {
         this.imageUtil = imageUtil;
     }
 
-    public List<UserResponse> findAll() {
-        List<User> users = userRepository.findAll();
-        List<UserResponse> userResponses = new ArrayList<>();
-        users.forEach(user -> {
-            userResponses.add(user.toUserResponse());
-        });
-        return userResponses;
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     public User findByUsername(String username) {
@@ -45,7 +40,7 @@ public class UserService {
         throw new UsernameNotFoundException("Username " + username + " not found");
     }
 
-    public UserResponse update(String username, UpdateUserRequest user) {
+    public User update(String username, UpdateUserRequest user) {
         Optional<User> oldUser = userRepository.findByUsername(username.toLowerCase().trim());
         if(oldUser.isPresent()) {
             var updatedUser = oldUser.get();
@@ -53,7 +48,7 @@ public class UserService {
                 updatedUser.setPassword(passwordEncoder.encode(user.getPassword()));
             if(!user.getPhoto().isEmpty())
                 updatedUser.setPfpUrl(imageUtil.uploadImage(user.getPhoto()));
-            return userRepository.save(updatedUser).toUserResponse();
+            return userRepository.save(updatedUser);
         }
         throw new UsernameNotFoundException("Username " + username + " not found");
     }

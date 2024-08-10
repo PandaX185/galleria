@@ -4,10 +4,12 @@ import com.panda.galleria.model.Follow;
 import com.panda.galleria.model.User;
 import com.panda.galleria.repository.FollowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FollowService {
@@ -29,6 +31,7 @@ public class FollowService {
                 .follower(follower)
                 .following(following)
                 .build();
+
         followRepository.save(follow);
     }
 

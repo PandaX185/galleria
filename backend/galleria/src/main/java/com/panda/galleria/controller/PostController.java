@@ -29,12 +29,17 @@ public class PostController {
 
     @GetMapping("")
     public ResponseEntity<List<PostResponse>> getPosts(@RequestParam String username) {
-        return ResponseEntity.ok(postService.getPostsByUsername(username));
+        return ResponseEntity.ok(
+                postService.getPostsByUsername(username)
+                        .stream()
+                        .map(Post::toPostResponse)
+                        .toList()
+        );
     }
 
     @GetMapping("/{postId}")
     public ResponseEntity<PostResponse> getPost(@PathVariable Long postId) throws PostNotFoundException {
-        return ResponseEntity.ok(postService.getPost(postId));
+        return ResponseEntity.ok(postService.getPost(postId).toPostResponse());
     }
 
     @PostMapping("")
@@ -52,6 +57,6 @@ public class PostController {
                 .username(username)
                 .build();
 
-        return ResponseEntity.ok(postService.save(post));
+        return ResponseEntity.ok(postService.save(post).toPostResponse());
     }
 }
